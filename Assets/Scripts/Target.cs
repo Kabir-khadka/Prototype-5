@@ -4,7 +4,10 @@ public class Target : MonoBehaviour
 {
 
     private Rigidbody targetRb;
+    private GameManager gameManager;
+    public ParticleSystem explosionParticle;
 
+    public int pointValue;
     private float minSpeed = 15;
     private float maxSpeed = 20;
     private float maxTorque = 1;
@@ -24,6 +27,9 @@ public class Target : MonoBehaviour
 
         //Setting the position for the objects to spawn
         transform.position = RandomPos();
+
+        //Calling gamemanager object as well as script
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -35,6 +41,9 @@ public class Target : MonoBehaviour
     private void OnMouseDown()
     {
         Destroy(gameObject);
+        Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+        gameManager.UpdateScore(pointValue);
+
     }
 
     private void OnTriggerEnter(Collider other)
