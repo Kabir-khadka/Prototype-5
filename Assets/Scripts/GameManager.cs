@@ -17,6 +17,14 @@ public class GameManager : MonoBehaviour
     public List<GameObject> targets;
     private float spawnRate = 1.0f;
     public bool isGameActive;
+
+    //Adding lives variables
+    public TextMeshProUGUI livesText;
+    private int lives;
+
+    //For pause variables
+    public GameObject pauseScreen;
+    private bool paused;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,6 +35,11 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //checking if the input key is pressed
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ChangePaused();
+        }
         
     }
 
@@ -47,6 +60,18 @@ public class GameManager : MonoBehaviour
         score += scoreToAdd;
         scoreText.text = "Score: " + score;
 
+    }
+
+    //Updating lives
+    public void UpdateLives(int livesToChange)
+    {
+        lives += livesToChange;
+        livesText.text = "Lives: " + lives;
+
+        if (lives <= 0)
+        {
+            GameOver();
+        }
     }
 
     public void GameOver()
@@ -70,8 +95,25 @@ public class GameManager : MonoBehaviour
         //Altering the spawn rate or reducing the spawn rate of targets to increase difficulty by dividing it with passed parameter "int dificulty"
         spawnRate /= difficulty;
         UpdateScore(0);
+        UpdateLives(3);
 
         titleScreen.gameObject.SetActive(false);
 
+    }
+
+    void ChangePaused()
+    {
+        if (!paused)
+        {
+            paused = true;
+            pauseScreen.SetActive(true);
+            Time.timeScale = 0;
+        }
+        else
+        {
+            paused = false;
+            pauseScreen.SetActive(false);
+            Time.timeScale = 1;
+        }
     }
 }
